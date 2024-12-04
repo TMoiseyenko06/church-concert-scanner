@@ -5,6 +5,7 @@ const check_in_btn = document.getElementById('check-in-btn')
 const wrap_1 = document.getElementById('wrap-1')
 const apiUrl = 'https://church-concert.onrender.com'
 const apiKey = 'u]l]^dkxt[fi!qNz~$i[^PLQiW4!l|&9qo>qxI0(/257vJp57w9~7bkzWJ'
+const table_wrapper = document.getElementById('table-wrap')
 const scanner = new Html5QrcodeScanner('reader', {
     qrbox: {
         width: 700,
@@ -37,7 +38,21 @@ async function success(result) {
     console.log(jsonResponse);
 }
 
+async function checkIn(hash){
+    const api_result = await fetch(`${apiUrl}/person/check-in`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': apiKey
+        }  
+
+})
+}
+
 function createTable(data, columnOrder) {
+
+    const people = data.length
+    console.log(people)
    
     if (!data || data.length === 0) {
         console.log("No data available to display.");
@@ -78,11 +93,11 @@ function createTable(data, columnOrder) {
             row.appendChild(td);
 
         });
-    
+        table.id = 'table'
         table.appendChild(row);
     });
 
-    document.body.appendChild(table);
+    table_wrapper.appendChild(table);
 }
 
 

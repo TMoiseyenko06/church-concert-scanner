@@ -6,3 +6,17 @@
 #wrap1 {
     display: none;
 }
+
+body {
+    background-color: #fdf0d5;
+}
+
+.card {
+    background-color: #003049 ;
+    color: white;
+}
+
+table, th, td {
+    border: 1px solid;
+    padding: 5px;
+  }
