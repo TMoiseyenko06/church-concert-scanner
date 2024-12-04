@@ -38,50 +38,45 @@ async function success(result) {
 }
 
 function createTable(data, columnOrder) {
-    // Check if data is valid and not empty
+   
     if (!data || data.length === 0) {
         console.log("No data available to display.");
         return;
     }
 
-    // Create table element
     let table = document.createElement('table');
     table.setAttribute('border', '1');
-    table.style.borderCollapse = 'collapse'; // Optional styling for better appearance
-    table.style.width = '100%'; // Optional styling for full-width
+    table.style.borderCollapse = 'collapse'; 
+    
 
     let headerRow = document.createElement('tr');
-    
-    // Use the custom column order, or fall back to the original order
     const headers = columnOrder || Object.keys(data[0]);
     
-    // Ensure columns in the table match the desired order (excluding 'plus_hash' and 'id')
     headers.forEach(header => {
-        if (header !== 'plus_hash' && header !== 'id') {
-            let th = document.createElement('th');
-            th.innerText = header;
-            headerRow.appendChild(th);
-        }
+
+        let th = document.createElement('th');
+        th.innerText = header;
+        headerRow.appendChild(th);
+
     });
     table.appendChild(headerRow);
 
     data.forEach(item => {
         let row = document.createElement('tr');
         
-        // Loop through each header in the custom order
+
         headers.forEach(header => {
-            if (header !== 'plus_hash' && header !== 'id') {
-                let td = document.createElement('td');
+
+            let td = document.createElement('td');
               
-                // Check if value is an object and handle it
-                if (typeof item[header] === 'object' && item[header] !== null) {
-                    td.innerText = JSON.stringify(item[header], null, 2); // Beautify JSON
-                    td.style.whiteSpace = 'pre-wrap'; // Allows wrapping of JSON content
-                } else {
-                    td.innerText = item[header];
-                }
-                row.appendChild(td);
+            if (typeof item[header] === 'object' && item[header] !== null) {
+                td.innerText = JSON.stringify(item[header], null, 2); 
+                td.style.whiteSpace = 'pre-wrap'; 
+            } else {
+                td.innerText = item[header];
             }
+            row.appendChild(td);
+
         });
     
         table.appendChild(row);

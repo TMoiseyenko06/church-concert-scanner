@@ -1,0 +1,3 @@
+- get scanner working with api
+- finish gui
+no - Larry
