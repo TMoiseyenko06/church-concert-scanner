@@ -2,10 +2,14 @@ const name_field = document.getElementById('name-field')
 const check_in_field = document.getElementById('check-in-field')
 const email_field = document.getElementById('email-field')
 const check_in_btn = document.getElementById('check-in-btn')
+const total_amount = document.getElementById('total-amt')
+const ctx = document.getElementById('chart')
+const checked_in_amt = document.getElementById('checked-in-amt')
 const wrap_1 = document.getElementById('wrap-1')
 const apiUrl = 'https://church-concert.onrender.com'
 const apiKey = 'u]l]^dkxt[fi!qNz~$i[^PLQiW4!l|&9qo>qxI0(/257vJp57w9~7bkzWJ'
 const table_wrapper = document.getElementById('table-wrap')
+let current_hash = ''
 const scanner = new Html5QrcodeScanner('reader', {
     qrbox: {
         width: 700,
@@ -27,6 +31,7 @@ async function success(result) {
         body: JSON.stringify({
             "plus_hash": result
         })
+
     });
 
     
@@ -35,18 +40,47 @@ async function success(result) {
     name_field.textContent = `Name: ${jsonResponse['first_name']} ${jsonResponse['last_name']}`
     check_in_field.textContent = `Checked In: ${jsonResponse['checked_in']}`
     email_field.textContent = `E-mail: ${jsonResponse['email']}`
+    current_hash = jsonResponse['plus_hash']
     console.log(jsonResponse);
 }
 
 async function checkIn(hash){
-    const api_result = await fetch(`${apiUrl}/person/check-in`, {
-        method: 'GET',
+    const api_result = await fetch(`${apiUrl}/person/confirm`, {
+        method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': apiKey
-        }  
-
+        },
+        body: JSON.stringify({
+            "plus_hash": hash
+        })
 })
+
+    return api_result.status
+
+}
+
+function createChart(total,checked){
+    
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: ['Total People','Checked in'],
+          datasets: [{
+            label: 'People',
+            data: [total,checked],
+            borderWidth: 1,
+            backgroundColor: ['#b4a789','#9c5b46']
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
 }
 
 function createTable(data, columnOrder) {
@@ -115,9 +149,35 @@ async function get_all() {
         }  
 
 })
+
+    const checked_in_result = await fetch(`${apiUrl}/person/get_checked_in`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': apiKey
+        }
+    })
+    
     const jsonResponse = await api_result.json();
+    const checkedResponse = await checked_in_result.json()
     createTable(jsonResponse,['first_name','last_name','email','checked_in'])
+    createChart(jsonResponse.length,checkedResponse.length)
     console.log(jsonResponse);
 }
 
 get_all()
+
+check_in_btn.addEventListener("click",(event) => {
+    event.preventDefault()
+    console.log(current_hash)
+    const status = checkIn(current_hash)
+    if (status == 200){
+        name_field.textContent = `Name: ${jsonResponse['first_name']} ${jsonResponse['last_name']}`
+        check_in_field.textContent = `Checked In: ${jsonResponse['checked_in']}`
+        email_field.textContent = ""
+        table_wrapper.innerHTML = ''
+        get_all()
+    }
+})
+
+
