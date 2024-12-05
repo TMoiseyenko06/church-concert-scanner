@@ -34,14 +34,17 @@ async function success(result) {
 
     });
 
-    
     const jsonResponse = await api_result.json();
-    
-    name_field.textContent = `Name: ${jsonResponse['first_name']} ${jsonResponse['last_name']}`
-    check_in_field.textContent = `Checked In: ${jsonResponse['checked_in']}`
-    email_field.textContent = `E-mail: ${jsonResponse['email']}`
-    current_hash = jsonResponse['plus_hash']
-    console.log(jsonResponse);
+    if (!jsonResponse['checked_in']){
+        name_field.textContent = `Name: ${jsonResponse['first_name']} ${jsonResponse['last_name']}`
+        check_in_field.textContent = `Checked In: ${jsonResponse['checked_in']}`
+        email_field.textContent = `E-mail: ${jsonResponse['email']}`
+        current_hash = jsonResponse['plus_hash']
+        console.log(jsonResponse);
+    }else{
+        alert('This Person has Already Checked In!')
+    }
+
 }
 
 async function checkIn(hash){
@@ -167,16 +170,19 @@ async function get_all() {
 
 get_all()
 
-check_in_btn.addEventListener("click",(event) => {
+check_in_btn.addEventListener("click",async (event) => {
     event.preventDefault()
     console.log(current_hash)
-    const status = checkIn(current_hash)
-    if (status == 200){
-        name_field.textContent = `Name: ${jsonResponse['first_name']} ${jsonResponse['last_name']}`
-        check_in_field.textContent = `Checked In: ${jsonResponse['checked_in']}`
-        email_field.textContent = ""
-        table_wrapper.innerHTML = ''
+    const status = await checkIn(current_hash)
+    console.log(status)
+    if (status== 200){
+        name_field.textContent = `Name:`
+        check_in_field.textContent = `Checked In:`
+        email_field.textContent = "E-Mail:"
+        table.innerHTML = ''
+        current_hash = ''
         get_all()
+        scanner.resume()
     }
 })
 

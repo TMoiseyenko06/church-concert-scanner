@@ -1,6 +1,5 @@
-#reader {
+#reader, .card {
     width: 500px;
-    height: 500px;
 }
 
 #wrap1 {
@@ -19,4 +18,12 @@ body {
 table, th, td {
     border: 1px solid;
     padding: 5px;
+  }
+
+#check-in-btn {
+    background-color: bisque;
+    border-radius: 5px;
+    border: none;
+    font-size: larger;
+    color: #003049;
   }
