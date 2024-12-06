@@ -71,7 +71,7 @@ function createChart(total,checked){
           labels: ['Total People','Checked in'],
           datasets: [{
             label: 'People',
-            data: [total,checked],
+            data: [total-checked,checked],
             borderWidth: 1,
             backgroundColor: ['#b4a789','#9c5b46']
           }]
